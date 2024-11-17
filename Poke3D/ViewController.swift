@@ -65,7 +65,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // use reference image width and height
             let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height)
             
-            // plane is transparent so user can view the card
+            // add transparency to plane so user can view the card
             plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0.5)
             
             // add our 3D plane on top of card
