@@ -30,13 +30,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillAppear(animated)
         
         // Create a session configuration
-        // will look for a specific image we provide in the real world
-        let configuration = ARImageTrackingConfiguration()
+        // tracks real world objects
+        let configuration = ARWorldTrackingConfiguration()
         
         // reference images
         if let imageToTrack = ARReferenceImage.referenceImages(inGroupNamed: "Pokemon Cards", bundle: Bundle.main) {
             
-            configuration.trackingImages = imageToTrack
+            // planes and images
+            configuration.detectionImages = imageToTrack
             
             configuration.maximumNumberOfTrackedImages = 2
             
@@ -64,6 +65,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // if potential anchor
         if let imageAnchor = anchor as? ARImageAnchor {
+            
             // use reference image width and height
             let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height)
             
@@ -72,20 +74,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             // add our 3D plane on top of card
             let planeNode = SCNNode(geometry: plane)
-            
             // rotate 90 degrees, anti-clockwise along the x-axis
             planeNode.eulerAngles.x = -.pi/2
             
             node.addChildNode(planeNode)
             
-            // adding pokemon to our plane node
-            if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
-                if let pokeNode = pokeScene.rootNode.childNodes.first {
-                    // rotate 90 degrees, clockwise along x-axis
-                    pokeNode.eulerAngles.x = .pi/2
-                    planeNode.addChildNode(pokeNode)
+            // adding pokemons to our plane node
+            if imageAnchor.referenceImage.name == "Eevee" {
+                // adding pokemon to our plane node
+                if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
+                    if let pokeNode = pokeScene.rootNode.childNodes.first {
+                        // rotate 90 degrees, clockwise along x-axis
+                        pokeNode.eulerAngles.x = .pi/2
+                        planeNode.addChildNode(pokeNode)
+                    }
                 }
             }
+            
+            if imageAnchor.referenceImage.name == "Oddish" {
+                if let pokeScene = SCNScene(named: "art.scnassets/oddish.scn") {
+                    if let pokeNode = pokeScene.rootNode.childNodes.first {
+                        // rotate 90 degrees, clockwise along x-axis
+                        pokeNode.eulerAngles.x = .pi/2
+                        planeNode.addChildNode(pokeNode)
+                    }
+                }
+            }
+            
         }
         
         return node
