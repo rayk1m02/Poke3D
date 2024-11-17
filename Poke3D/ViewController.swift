@@ -21,6 +21,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
+        
+        // adds better lighting to view pokemon
+        sceneView.autoenablesDefaultLighting = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,8 +38,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             configuration.trackingImages = imageToTrack
             
-            // currently only have one card
-            configuration.maximumNumberOfTrackedImages = 1
+            configuration.maximumNumberOfTrackedImages = 2
             
             print("Images Successfully Added")
         }
@@ -71,10 +73,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // add our 3D plane on top of card
             let planeNode = SCNNode(geometry: plane)
             
-            // rotate plane by 90 degrees, anti-clockwise along the x-axis
+            // rotate 90 degrees, anti-clockwise along the x-axis
             planeNode.eulerAngles.x = -.pi/2
             
             node.addChildNode(planeNode)
+            
+            // adding pokemon to our plane node
+            if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
+                if let pokeNode = pokeScene.rootNode.childNodes.first {
+                    // rotate 90 degrees, clockwise along x-axis
+                    pokeNode.eulerAngles.x = .pi/2
+                    planeNode.addChildNode(pokeNode)
+                }
+            }
         }
         
         return node
